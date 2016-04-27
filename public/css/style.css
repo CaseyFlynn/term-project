@@ -1,0 +1,110 @@
+body{
+
+}
+.app{
+    width: 600px;
+    margin: 0 auto;
+    border: 5px solid tomato;
+}
+.users{
+    float : right;
+    margin-right: 1.5em;
+}
+.messages {
+    width: 400px;
+    margin: 1em;
+    border : 1px solid black;
+    padding: 1em;
+}
+.message_form,
+.change_name_form{
+    padding: 1em;
+}
+
+#tweetForm{
+    height: 500px;
+    width: 100%;
+}
+.tweetList{
+    border: 1px solid black;
+    float: left;
+    height: 500px;
+    width: 45%;
+}
+
+.tweets {
+    height: 75%;
+    overflow:hidden;
+    padding-left: 10px;
+
+}
+
+.tweets:hover {
+    overflow-y:scroll;
+
+}
+
+
+.tweet .avatar
+{
+    position: relative;
+
+    display: inline-block;
+    float: left;
+
+    width: 48px;
+    margin: 10px;
+
+    border: 2px solid #ccc;
+    border-radius: 48px;
+}
+
+.tweet blockquote
+{
+    font-size: 14px;
+
+    display: inline-block;
+    float: right;
+
+    width: calc(100% - 72px);
+    margin: 0;
+    padding: 10px;
+}
+
+.tweet blockquote cite
+{
+    font-weight: bold;
+    font-style: normal;
+}
+
+.tweet blockquote cite a
+{
+    display: inline-block;
+
+    margin-right: 5px;
+
+    text-decoration: none;
+
+    color: #1abc9c;
+}
+
+.tweet blockquote cite a:hover
+{
+    text-decoration: underline;
+}
+
+.tweet blockquote .screen-name
+{
+    font-size: 13px;
+    font-weight: normal;
+
+    color: #ccc;
+}
+
+.tweet blockquote .content
+{
+    display: block;
+    clear: left;
+
+    margin-top: 5px;
+}
