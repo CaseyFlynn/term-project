@@ -80,12 +80,9 @@ var TweetApp = React.createClass({
     },
 
     componentDidMount() {
-        //TODO: change socket stuffs
-        //socket.on('init', this._initialize);
         socket.on('tweet', this._tweetRecieved);
         //setInterval(this._mockTweetRecieved, 250);
-        setInterval(this._updateLineChart, 2000)
-        //this.setState({users: [], tweets:[{text: 'some twitter text'}]});
+        setInterval(this._updateLineChart, 2000);
     },
 
     _graphCounter : 0,

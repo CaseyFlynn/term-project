@@ -38,28 +38,18 @@ var counter = 0;
 var candidateNames = ['sandersTweet','hilldogTweet','trumpTweet','cruzTweet'];
 
 socketClient.on('tweet', function(data) {
-    //TODO: better handling
-    //counter++;
-    //if (counter > 10) {
-        //console.log(data);
-        counter = 0;
-        if (data.text.toLowerCase().indexOf('sanders') > -1) {
-            //io.volatile.emit('tweet',{tweet: data, candidate: 'sandersTweet'})
-            io.emit('tweet',{tweet: data, candidate: 'sandersTweet'})
-        }
-        if (data.text.toLowerCase().indexOf('clinton') > -1) {
-            //io.volatile.emit('tweet',{tweet: data, candidate: 'hilldogTweet'})
-            io.emit('tweet',{tweet: data, candidate: 'hilldogTweet'})
-        }
-        if (data.text.toLowerCase().indexOf('trump') > -1) {
-            //io.volatile.emit('tweet',{tweet: data, candidate: 'trumpTweet'})
-            io.emit('tweet',{tweet: data, candidate: 'trumpTweet'})
-        }
-        if (data.text.toLowerCase().indexOf('cruz') > -1) {
-            //io.volatile.emit('tweet',{tweet: data, candidate: 'cruzTweet'})
-            io.emit('tweet',{tweet: data, candidate: 'cruzTweet'})
-        }
-    //}
+    if (data.text.toLowerCase().indexOf('sanders') > -1) {
+        io.emit('tweet',{tweet: data, candidate: 'sandersTweet'})
+    }
+    if (data.text.toLowerCase().indexOf('clinton') > -1) {
+        io.emit('tweet',{tweet: data, candidate: 'hilldogTweet'})
+    }
+    if (data.text.toLowerCase().indexOf('trump') > -1) {
+        io.emit('tweet',{tweet: data, candidate: 'trumpTweet'})
+    }
+    if (data.text.toLowerCase().indexOf('cruz') > -1) {
+        io.emit('tweet',{tweet: data, candidate: 'cruzTweet'})
+    }
 });
 
 

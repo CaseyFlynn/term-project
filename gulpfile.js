@@ -4,35 +4,23 @@ var gulp  = require('gulp'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
     react = require('gulp-react'),
-    browserify = require('gulp-browserify'),
+    reactify = require('reactify'),
+    browserify = require('browserify'),
     htmlreplace = require('gulp-html-replace'),
     babelify = require('babelify');
+var source = require('vinyl-source-stream');
+var rename = require('gulp-rename');
+var buffer = require('vinyl-buffer');
+
 
 // create a default task and just log a message
 gulp.task('default', function() {
-    gulp.src('./client/*.jsx')
-        .pipe(browserify({
-            extensions: ['.jsx'],
-            debug: true,
-            transform: ['babelify']
-        }))
-        .pipe(gulp.dest('dist'))
-    /*
-     //.pipe(concat('app.min.js'))
-     //.pipe(uglify())
-
-     .pipe(concat(path.MINIFIED_OUT))
-        .pipe(uglify(path.MINIFIED_OUT))
-        .pipe(gulp.dest(path.DEST_BUILD));
-        browserify ./client/*.jsx  -t babelify --outfile ./public/js/app.js
-    */
+    return browserify({entries: './client/tweetStream.jsx', extensions: ['.jsx'], transform: [babelify, reactify]})
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(buffer())
+        .pipe(uglify())
+        .pipe(rename('app.js'))
+        .pipe(gulp.dest('public/js/'))
 });
 
-
-gulp.task('build', function(){
-    gulp.src(path.JS)
-        .pipe(react())
-        .pipe(concat(path.MINIFIED_OUT))
-        .pipe(uglify(path.MINIFIED_OUT))
-        .pipe(gulp.dest(path.DEST_BUILD));
-});
