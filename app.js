@@ -1,13 +1,8 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
-
 var express = require('express');
 var http = require('http');
 var socket = require('./routes/socket.js');
-
 
 var app = express();
 var server = http.createServer(app);
@@ -25,7 +20,6 @@ if (process.env.NODE_ENV === 'development') {
 var io = require('socket.io').listen(server);
 io.sockets.on('connection', socket);
 
-
 /*communication to twitter-scrape server*/
 var clientio = require('socket.io-client');
 
@@ -35,20 +29,20 @@ var tweetServer = 'http://40.76.197.56:3000';
 var socketClient = clientio.connect(tweetServer, {reconnect: true});
 
 var counter = 0;
-var candidateNames = ['sandersTweet','hilldogTweet','trumpTweet','cruzTweet'];
+var candidateNames = ['sanders','hilldog','trump','cruz'];
 
 socketClient.on('tweet', function(data) {
     if (data.text.toLowerCase().indexOf('sanders') > -1) {
-        io.emit('tweet',{tweet: data, candidate: 'sandersTweet'})
+        io.emit('tweet',{tweet: data, candidate: 'sanders'})
     }
     if (data.text.toLowerCase().indexOf('clinton') > -1) {
-        io.emit('tweet',{tweet: data, candidate: 'hilldogTweet'})
+        io.emit('tweet',{tweet: data, candidate: 'hilldog'})
     }
     if (data.text.toLowerCase().indexOf('trump') > -1) {
-        io.emit('tweet',{tweet: data, candidate: 'trumpTweet'})
+        io.emit('tweet',{tweet: data, candidate: 'trump'})
     }
     if (data.text.toLowerCase().indexOf('cruz') > -1) {
-        io.emit('tweet',{tweet: data, candidate: 'cruzTweet'})
+        io.emit('tweet',{tweet: data, candidate: 'cruz'})
     }
 });
 

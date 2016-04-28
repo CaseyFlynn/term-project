@@ -52,27 +52,27 @@ var TweetList = React.createClass({
 var TweetApp = React.createClass({
 
     getInitialState() {
-        var tweets = { sandersTweet: [],
-            hilldogTweet: [],
-            trumpTweet: [],
-            cruzTweet: [],
+        var tweets = { sanders: [],
+            hilldog: [],
+            trump: [],
+            cruz: [],
             counts: {
-                sandersTweet: 0,
-                hilldogTweet: 0,
-                trumpTweet: 0,
-                cruzTweet: 0
+                sanders: 0,
+                hilldog: 0,
+                trump: 0,
+                cruz: 0
             },
             speed: {
-                sandersTweet: 1,
-                hilldogTweet: 1,
-                trumpTweet: 1,
-                cruzTweet: 1
+                sanders: 1,
+                hilldog: 1,
+                trump: 1,
+                cruz: 1
             },
             secondCounts: {
-                sandersTweet: 0,
-                hilldogTweet: 0,
-                trumpTweet: 0,
-                cruzTweet: 0
+                sanders: 0,
+                hilldog: 0,
+                trump: 0,
+                cruz: 0
             }
         };
         //return {tweets: []};
@@ -131,10 +131,10 @@ var TweetApp = React.createClass({
     },
 
     lineDataIndex: {
-        sandersTweet: 3,
-        hilldogTweet: 2,
-        trumpTweet: 0,
-        cruzTweet: 1
+        sanders: 3,
+        hilldog: 2,
+        trump: 0,
+        cruz: 1
     },
 
     lineData : [
@@ -184,7 +184,7 @@ var TweetApp = React.createClass({
     render() {
         return (
             <div>
-                <div className="test">
+                <div className="realTimeGraph">
                     <LineChart
                         legend={true}
                         data={this.lineData}
@@ -204,28 +204,28 @@ var TweetApp = React.createClass({
                     />
                 </div>
                 <TweetList
-                    tweets={this.state.tweets.sandersTweet}
+                    tweets={this.state.tweets.sanders}
                     candidateName = 'Bernie Sanders'
                     divClass = 'sanders'
-                    tweetCount = {this.state.tweets.counts.sandersTweet}
+                    tweetCount = {this.state.tweets.counts.sanders}
                 />
                 <TweetList
-                    tweets={this.state.tweets.hilldogTweet}
+                    tweets={this.state.tweets.hilldog}
                     candidateName = 'Hill Dogg'
                     divClass = 'clinton'
-                    tweetCount = {this.state.tweets.counts.hilldogTweet}
+                    tweetCount = {this.state.tweets.counts.hilldog}
                 />
                 <TweetList
-                    tweets={this.state.tweets.trumpTweet}
+                    tweets={this.state.tweets.trump}
                     candidateName = 'The Trump'
                     divClass = 'trump'
-                    tweetCount = {this.state.tweets.counts.trumpTweet}
+                    tweetCount = {this.state.tweets.counts.trump}
                 />
                 <TweetList
-                    tweets={this.state.tweets.cruzTweet}
+                    tweets={this.state.tweets.cruz}
                     candidateName = 'Ted Cruz'
                     divClass = 'cruz'
-                    tweetCount = {this.state.tweets.counts.cruzTweet}
+                    tweetCount = {this.state.tweets.counts.cruz}
                 />
             </div>
         );
