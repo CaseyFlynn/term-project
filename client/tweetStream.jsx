@@ -82,13 +82,13 @@ var TweetApp = React.createClass({
     componentDidMount() {
         socket.on('tweet', this._tweetRecieved);
         //setInterval(this._mockTweetRecieved, 250);
-        setInterval(this._updateLineChart, 2000);
+        setInterval(this._updateLineChart, 1000);
     },
 
     _graphCounter : 0,
 
     _updateLineChart() {
-        this._graphCounter+=2;
+        this._graphCounter+=1;
         var {tweets} = this.state;
 
         //TODO: foreach candidate
@@ -99,7 +99,7 @@ var TweetApp = React.createClass({
             tweets.secondCounts[key] = 0;
             var idx = this.lineDataIndex[key];
             this.lineData[idx].values.push({x: this._graphCounter, y: secCount});
-            if (this.lineData[idx].values.length > 10) {
+            if (this.lineData[idx].values.length > 20) {
                 this.lineData[idx].values.shift();
             }
         }
@@ -191,10 +191,11 @@ var TweetApp = React.createClass({
                         colors={this.colors}
                         width='100%'
                         height={400}
+                        margins = {{left: 100, right: 100, top: 50, bottom: 50}}
                         viewBoxObject={{
                             x: 0,
                             y: 0,
-                            width: 500,
+                            width: 800,
                             height: 400
                         }}
                         title="Tweet Counts"

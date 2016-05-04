@@ -21,6 +21,18 @@ body{
     padding: 1em;
 }
 
+.realTimeGraph {
+    padding: 50px;
+}
+.rd3-chart-title {
+    text-align: center;
+}
+
+.rd3-legend
+{
+    width: 200px !important;
+}
+
 #tweetForm{
     height: 500px;
     width: 100%;
@@ -108,3 +120,4 @@ body{
 
     margin-top: 5px;
 }
+
