@@ -2,104 +2,53 @@ var React = require('react');
 var socket = io.connect();
 var mocks = require('../mocks/mockTweets');
 var d3 = require('d3');
-import {LineChart} from 'react-d3';
+import {BarChart} from 'react-d3-components';
+var sentiment = require('sentiment');
 
-var Tweet = React.createClass({
-    render() {
-        var tweet = this.props.tweet;
-        return (
-            <div className='tweet'>
-                <img src={tweet.avatar} className="avatar"/>
-                <blockquote>
-                    <cite>
-                        <a href={"http://www.twitter.com/" + tweet.screenname}>{tweet.author}</a>
-                        <span className="screen-name">@{tweet.screenname}</span>
-                    </cite>
-                    <span className="content">{tweet.text}</span>
-                </blockquote>
-            </div>
-        );
-    }
-});
+//var BarChart = ReactD3.BarChart;
 
-var TweetList = React.createClass({
-    render() {
-        return (
-            <div className='tweetList'>
-                <div className={this.props.candidateName}>
-                    <h2>{this.props.candidateName}</h2>
-                    <h3>Count: {this.props.tweetCount}</h3>
-                </div>
-                <div className='tweets'>
-                    {
-                        this.props.tweets.map((tweetData, i) => {
-                            return (
-                                <Tweet
-                                    key = {i}
-                                    tweet = {tweetData}
-                                />
-                            );
-                        })
-                    }
-                </div>
-            </div>
-        );
-    }
-});
-
-
-
-var TweetApp = React.createClass({
+var TweetSentiment = React.createClass({
 
     getInitialState() {
-        var tweets = { sanders: [],
-            hilldog: [],
-            trump: [],
-            cruz: [],
+        var tweets = {
             counts: {
-                sanders: 0,
-                hilldog: 0,
-                trump: 0,
-                cruz: 0
-            },
-            speed: {
-                sanders: 1,
-                hilldog: 1,
-                trump: 1,
-                cruz: 1
-            },
-            secondCounts: {
-                sanders: 0,
-                hilldog: 0,
-                trump: 0,
-                cruz: 0
+                sanders: {
+                    positive: 0,
+                    negative: 0,
+                    neutral: 0
+                },
+                hilldog : {
+                    positive: 0,
+                        negative: 0,
+                        neutral: 0
+                },
+                trump: {
+                    positive: 0,
+                    negative: 0,
+                    neutral: 0
+                },
+                cruz: {
+                    positive: 0,
+                    negative: 0,
+                    neutral: 0
+                }
             }
         };
-        //return {tweets: []};
         return {tweets};
     },
 
     componentDidMount() {
         socket.on('tweet', this._tweetRecieved);
-        //setInterval(this._updateLineChart, 1000);
+        setInterval(this._updateBarChart, 1000);
     },
 
-    _graphCounter : 0,
-
-    _updateLineChart() {
-        this._graphCounter+=1;
+    _updateBarChart() {
         var {tweets} = this.state;
-
-        //TODO: foreach candidate
-        for (var key in this.lineDataIndex) {
-
-            //get and reset sendondCount
-            var secCount = tweets.secondCounts[key];
-            tweets.secondCounts[key] = 0;
-            var idx = this.lineDataIndex[key];
-            this.lineData[idx].values.push({x: this._graphCounter, y: secCount});
-            if (this.lineData[idx].values.length > 20) {
-                this.lineData[idx].values.shift();
+        for (var grp in this.barDataGroups) {
+            for (var key in this.barDataIndex) {
+                var grpIdx = this.barDataGroups[grp];
+                var dataIdx = this.barDataIndex[key];
+                this.barData[grpIdx].values[dataIdx].y = tweets.counts[key][grp];
             }
         }
         this.setState({tweets});
@@ -112,91 +61,71 @@ var TweetApp = React.createClass({
     },
 
     _tweetRecieved(data) {
+        this.totalTweets++;
         this._updateTweetListForCandidate(data.tweet, data.candidate);
     },
 
     _updateTweetListForCandidate(tweet, candidate) {
         var {tweets} = this.state;
-        tweets.counts[candidate]++;
-        tweets.secondCounts[candidate]++;
 
-        if (tweets.counts[candidate] % tweets.speed[candidate] == 0) {
-            tweets[candidate].unshift(tweet);
-            if (tweets[candidate].length > 10) {
-                tweets[candidate].pop()
-            }
+        var sent = sentiment(tweet.text).score;
+        if (sent > 0) {
+            tweets.counts[candidate].positive++;
+        } else if (sent == 0) {
+            tweets.counts[candidate].neutral++;
+        } else {
+            tweets.counts[candidate].negative++;
         }
         this.setState({tweets});
     },
 
-    lineDataIndex: {
-        sanders: 3,
-        hilldog: 2,
+    totalTweets: 0,
+
+    barDataIndex: {
         trump: 0,
-        cruz: 1
+        cruz: 1,
+        hilldog: 2,
+        sanders: 3
+    },
+
+    barDataGroups: {
+        neutral: 0,
+        negative: 1,
+        positive: 2
     },
 
     barData : [
         {
-            name: "Donald Trump",
-            values: [ { x: 0, y: 0, z: 0} ],
+            label: 'Neutral',
+            values: [{x: 'Trump', y: 10}, {x: 'Cruz', y: 4}, {x: 'Clinton', y: 3}, {x: 'Sanders', y: 3}]
         },
         {
-            name: "Ted Cruz",
-            values: [ { x: 0, y: 0, z: 0 } ],
+            label: 'Negative',
+            values: [{x: 'Trump', y: 20}, {x: 'Cruz', y: 5}, {x: 'Clinton', y: 3}, {x: 'Sanders', y: 1}]
         },
         {
-            name: "Hillary Clinton",
-            values: [ { x: 0, y: 0, z: 0 } ],
-        },
-        {
-            name: "Bernie Sanders",
-            values: [ { x: 0, y: 0, z: 0} ],
+            label: 'Positive',
+            values: [{x: 'Trump', y: 5}, {x: 'Cruz', y: 5}, {x: 'Clinton', y: 6}, {x: 'Sanders', y: 9}]
         }
     ],
 
-    colors : function(series, idx){
-        //console.log(series,idx);
-        switch(series){
-            case 0:
-                return '#FF0000';
-            case 1:
-                return '#FF00FF';
-            case 2:
-                return '#0000FF';
-            default:
-                return '#008000';
-        }
-    },
-
-    viewBoxObject : {
-        x: 0,
-        y: 0,
-        width: 500,
-        height: 400
+    tooltip : function(x, y0, y, total) {
+        return y.toString();
     },
 
     render() {
         return (
             <div>
+                <div>Total tweets recieved: {this.totalTweets}</div>
                 <div className="sentimentBarChart">
                     <BarChart
                         legend={true}
-                        data={this.lineData}
-                        colors={this.colors}
-                        width='100%'
-                        height={400}
-                        margins = {{left: 100, right: 100, top: 50, bottom: 50}}
-                        viewBoxObject={{
-                            x: 0,
-                            y: 0,
-                            width: 800,
-                            height: 400
-                        }}
-                        title="Tweet Counts"
-                        yAxisLabel="Tweet Count"
-                        xAxisLabel="Candidates"
-                        gridHorizontal={true}
+                        data={this.barData}
+                        width={800}
+                        height={800}
+                        margin={{top: 10, bottom: 50, left: 50, right: 10}}
+                        tooltipHtml={this.tooltip}
+                        tooltipMode={'element'}
                     />
                 </div>
             </div>
@@ -205,4 +134,4 @@ var TweetApp = React.createClass({
 });
 
 
-React.render(<TweetApp/>, document.getElementById('tweetForm'));
+React.render(<TweetSentiment/>, document.getElementById('sentimentChart'));
