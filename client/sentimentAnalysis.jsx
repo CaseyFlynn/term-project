@@ -97,15 +97,15 @@ var TweetSentiment = React.createClass({
     barData : [
         {
             label: 'Neutral',
-            values: [{x: 'Trump', y: 10}, {x: 'Cruz', y: 4}, {x: 'Clinton', y: 3}, {x: 'Sanders', y: 3}]
+            values: [{x: 'Trump', y: 0}, {x: 'Cruz', y: 0}, {x: 'Clinton', y: 0}, {x: 'Sanders', y: 0}]
         },
         {
             label: 'Negative',
-            values: [{x: 'Trump', y: 20}, {x: 'Cruz', y: 5}, {x: 'Clinton', y: 3}, {x: 'Sanders', y: 1}]
+            values: [{x: 'Trump', y: 0}, {x: 'Cruz', y: 0}, {x: 'Clinton', y: 0}, {x: 'Sanders', y: 0}]
         },
         {
             label: 'Positive',
-            values: [{x: 'Trump', y: 5}, {x: 'Cruz', y: 5}, {x: 'Clinton', y: 6}, {x: 'Sanders', y: 9}]
+            values: [{x: 'Trump', y: 0}, {x: 'Cruz', y: 0}, {x: 'Clinton', y: 0}, {x: 'Sanders', y: 0}]
         }
     ],
 
@@ -113,11 +113,30 @@ var TweetSentiment = React.createClass({
         return y.toString();
     },
 
+    colors : function(series, idx){
+        switch(series){
+            case 'Neutral':
+                return '#ffff00';
+            case 'Negative':
+                return '#ff1a1a';
+            case 'Positive':
+                return '#009933';
+            default:
+                return '#FFFFFF';
+        }
+    },
     render() {
         return (
             <div>
-                <div>Total tweets recieved: {this.totalTweets}</div>
-                <div className="sentimentBarChart">
+                <div id="tweetRecieveCounter">Total tweets recieved: {this.totalTweets}</div>
+                <div id="legend">
+                    <ul>
+                        <li style={{color: "#ffff00;"}}><span style={{color: "black;"}}>Neutral</span></li>
+                        <li style={{color: "#ff1a1a;"}}><span style={{color: "black;"}}>Negative</span></li>
+                        <li style={{color: "#009933;"}}><span style={{color: "black;"}}>Positive</span></li>
+                    </ul>
+                </div>
+                <div id="sentimentBarChart">
                     <BarChart
                         legend={true}
                         data={this.barData}
@@ -126,6 +145,7 @@ var TweetSentiment = React.createClass({
                         margin={{top: 10, bottom: 50, left: 50, right: 10}}
                         tooltipHtml={this.tooltip}
                         tooltipMode={'element'}
+                        colorScale={this.colors}
                     />
                 </div>
             </div>

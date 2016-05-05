@@ -13,9 +13,21 @@ var gulp  = require('gulp'),
 
 
 // create a default task and just log a message
-gulp.task('default', function() {
-    var jsxFiles = glob.sync('./client/*.jsx');
-    return browserify({entries:jsxFiles, extensions: ['.jsx'], transform: [babelify, reactify]})
+gulp.task('default', ['app','sentiment']);
+
+// create a default task and just log a message
+//gulp.task('app', function() {
+//    var jsxFiles = glob.sync('./client/*.jsx');
+//    return browserify({entries:jsxFiles, extensions: ['.jsx'], transform: [babelify, reactify]})
+//        .bundle()
+//        .pipe(source('bundle.js'))
+//        .pipe(buffer())
+//        .pipe(uglify())
+//        .pipe(rename('app.js'))
+//        .pipe(gulp.dest('public/js/'))
+//});
+gulp.task('app', function() {
+    return browserify({entries:'./client/tweetStream.jsx', extensions: ['.jsx'], transform: [babelify, reactify]})
         .bundle()
         .pipe(source('bundle.js'))
         .pipe(buffer())
@@ -23,4 +35,17 @@ gulp.task('default', function() {
         .pipe(rename('app.js'))
         .pipe(gulp.dest('public/js/'))
 });
+
+
+// create a default task and just log a message
+gulp.task('sentiment', function() {
+    return browserify({entries:'./client/sentimentAnalysis.jsx', extensions: ['.jsx'], transform: [babelify, reactify]})
+        .bundle()
+        .pipe(source('bundle.js'))
+        .pipe(buffer())
+        .pipe(uglify())
+        .pipe(rename('sentiment.js'))
+        .pipe(gulp.dest('public/js/'))
+});
+
 
